@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.service.found.mapper.IndexMapper">
+    <resultMap id="baseResultMap" type="com.service.found.entity.IndexEntity">
+        <id property="id" column="f_id"/>
+        <result property="content" column="f_content"/>
+        <result property="images" column="f_images"/>
+        <collection  property="user" ofType="com.service.found.entity.UserEntity">
+            <id property="id" column="id"/>
+            <result property="name" column="f_name"/>
+            <result property="image" column="f_image"/>
+        </collection>
+    </resultMap>
+    <select id="selectIndex" resultMap="baseResultMap">
+        select u.f_name,u.f_image,i.f_uid,i.f_content,i.f_images from f_index i
+        INNER JOIN f_user u
+        on u.f_id = i.f_uid
+    </select>
+</mapper>
