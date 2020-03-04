@@ -25,4 +25,8 @@ public class IndexService {
         PageInfo<IndexEntity> page = new PageInfo(indexEntities);
         return page;
     }
+    public List<IndexEntity> getLatestData(long latestTime){
+        List<IndexEntity> indexEntities = indexMapper.getLatestData(latestTime);
+        return indexEntities;
+    }
 }

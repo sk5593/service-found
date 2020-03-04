@@ -13,7 +13,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class IndexEntity implements Serializable {
     private int id;
+    private String opId;
     private String content;
     private String images;
     private UserEntity user;
-}
+    private ImageEntity[] imgArr;
+    private long createTime;
+ }

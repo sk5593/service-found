@@ -5,15 +5,30 @@
         <id property="id" column="f_id"/>
         <result property="content" column="f_content"/>
         <result property="images" column="f_images"/>
+        <result property="opId" column="f_opid"/>
+        <result property="createTime" column="f_create_time"/>
         <collection  property="user" ofType="com.service.found.entity.UserEntity">
-            <id property="id" column="id"/>
+            <id property="openId" column="f_openid"/>
             <result property="name" column="f_name"/>
             <result property="image" column="f_image"/>
         </collection>
     </resultMap>
+    <insert id="add" parameterType="com.service.found.entity.IndexEntity">
+       INSERT INTO f_index(f_opid,f_content,f_images,f_create_time)
+       VALUES (#{indexEntity.opId},#{indexEntity.content},#{indexEntity.images},#{indexEntity.createTime})
+    </insert>
     <select id="selectIndex" resultMap="baseResultMap">
-        select u.f_name,u.f_image,i.f_uid,i.f_content,i.f_images from f_index i
+        select u.f_name,u.f_image,i.f_opid,i.f_content,i.f_images,i.f_create_time from f_index i
         INNER JOIN f_user u
-        on u.f_id = i.f_uid
+        on u.f_openid = i.f_opid
+        ORDER BY i.f_create_time DESC
+    </select>
+    <select id="getLatestData" resultMap="baseResultMap" parameterType="long">
+        select u.f_name,u.f_image,i.f_opid,i.f_content,i.f_images,i.f_create_time from f_index i
+        INNER JOIN f_user u
+        on u.f_openid = i.f_opid
+        and	i.f_create_time > #{latestTime}
+        ORDER BY i.f_create_time DESC
+        limit 10
     </select>
 </mapper>

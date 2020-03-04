@@ -12,7 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity implements Serializable{
-    private int id;
     private String name;
     private String image;
     private String openId;
