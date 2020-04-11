@@ -5,4 +5,7 @@
     <insert id="replaceUserInfo" parameterType="com.service.found.entity.UserEntity">
         replace into f_user VALUES (#{userEntity.name},#{userEntity.image},#{userEntity.openId})
     </insert>
+    <select id="getUserInfo" resultType="com.service.found.entity.UserEntity">
+        SELECT name,image from f_user WHERE openid = #{openid}
+    </select>
 </mapper>

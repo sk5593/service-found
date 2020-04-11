@@ -12,4 +12,8 @@ public class UserService {
     public void login(UserEntity userEntity){
         userMapper.replaceUserInfo(userEntity);
     }
+    public UserEntity getUserInfo(String openId){
+        UserEntity userInfo = userMapper.getUserInfo(openId);
+        return userInfo;
+    }
 }

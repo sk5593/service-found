@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.service.found.mapper.DetailsMapper">
+    <!--<resultMap id="baseResultMap" type="com.service.found.entity.IndexEntity">-->
+        <!--<id property="id" column="id"/>-->
+        <!--<result property="content" column="content"/>-->
+        <!--<result property="images" column="images"/>-->
+        <!--<result property="opId" column="opid"/>-->
+        <!--<result property="createTime" column="create_time"/>-->
+        <!--<collection property="commentsEntityList" ofType="com.service.found.entity.CommentsEntity">-->
+            <!--<id property="cid" column="cid"/>-->
+            <!--<result property="commentCreateTime" column="comment_create_time"/>-->
+            <!--<result property="commentContent" column="comment_content"/>-->
+            <!--<collection property="user" ofType="com.service.found.entity.UserEntity">-->
+                <!--<id property="openId" column="openid"/>-->
+                <!--<result property="name" column="name"/>-->
+                <!--<result property="image" column="image"/>-->
+            <!--</collection>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+    <resultMap id="baseResultMap" type="com.service.found.entity.IndexEntity">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="images" column="images"/>
+        <result property="opId" column="opid"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="user" ofType="com.service.found.entity.UserEntity">
+            <id property="openId" column="openid"/>
+            <result property="name" column="name"/>
+            <result property="image" column="image"/>
+        </collection>
+    </resultMap>
+    <resultMap id="commentResultMap" type="com.service.found.entity.CommentsEntity">
+        <id property="cid" column="cid"/>
+        <result property="commentCreateTime" column="comment_create_time"/>
+        <result property="commentContent" column="comment_content"/>
+        <result property="opId" column="opid"/>
+        <collection property="user" ofType="com.service.found.entity.UserEntity">
+            <id property="openId" column="openid"/>
+            <result property="name" column="name"/>
+            <result property="image" column="image"/>
+        </collection>
+        <collection property="secondCommentsEntities" ofType="com.service.found.entity.SecondCommentsEntity">
+            <id property="scId" column="scid"/>
+            <result property="secondCommentContent" column="second_comment_content"/>
+            <result property="secondCreateTime" column="second_create_time"/>
+            <result property="commentedName" column="commented_name"/>
+            <result property="commentedOpId" column="commented_opid"/>
+            <result property="commentatorOpId" column="commentator_opid"/>
+            <result property="commentatorName" column="commentator_name"/>
+        </collection>
+    </resultMap>
+    <!--<select id="getDeatils" parameterType="int" resultMap="baseResultMap">-->
+        <!--SELECT-->
+        <!--c.comment_create_time,-->
+        <!--c.comment_content,-->
+        <!--c.cid,-->
+        <!--u.name,-->
+        <!--u.image,-->
+        <!--i.content,-->
+        <!--i.images,-->
+        <!--i.create_time,-->
+        <!--i.id,-->
+        <!--i.opid-->
+        <!--FROM-->
+         <!--(f_index i LEFT JOIN f_comments c ON c.aid = i.id )-->
+        <!--LEFT join f_user u on u.openid = c.opid  WHERE i.id = #{id}-->
+    <!--</select>-->
+    <select id="getDeatils" parameterType="int" resultMap="baseResultMap">
+        SELECT
+        u.name,
+        u.image,
+        i.content,
+        i.images,
+        i.create_time,
+        i.id,
+        i.opid
+        FROM
+        f_index i
+        INNER join f_user u on u.openid = i.opid  WHERE i.id = #{id}
+    </select>
+    <select id="getDeatilsComments" parameterType="int" resultMap="commentResultMap">
+    SELECT
+	u.NAME,
+	u.image,
+	c.cid,
+	c.comment_content,
+	c.comment_create_time,
+	c.opid,
+	sc.second_comment_content,
+	sc.second_create_time,
+	sc.commented_name,
+	sc.commentator_name
+    FROM
+	(
+	(f_comments c INNER JOIN f_user u ON u.openid = c.opid )
+	LEFT JOIN f_second_comments sc ON c.cid = sc.cid
+	)
+	where c.aid = #{id}
+    </select>
+    <insert id="addDeatilsComments" parameterType="com.service.found.entity.CommentsEntity">
+        INSERT into f_comments(comment_content,aid,comment_create_time,opid)
+        VALUES (#{commentsEntity.commentContent},#{commentsEntity.aid},#{commentsEntity.commentCreateTime},#{commentsEntity.opId})
+    </insert>
+    <insert id="addDeatilsSecondComments" parameterType="com.service.found.entity.SecondCommentsEntity">
+        INSERT INTO f_second_comments(cid,aid,second_comment_content,second_create_time,commentator_opid,commented_opid,commented_name,commentator_name)
+        VALUES (#{secondCommentsEntity.cid},#{secondCommentsEntity.aid}
+        ,#{secondCommentsEntity.secondCommentContent},#{secondCommentsEntity.secondCreateTime}
+        ,#{secondCommentsEntity.commentatorOpId},#{secondCommentsEntity.commentedOpId}
+        ,#{secondCommentsEntity.commentedName},#{secondCommentsEntity.commentatorName})
+    </insert>
+</mapper>

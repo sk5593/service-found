@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,4 +20,8 @@ public class IndexEntity implements Serializable {
     private UserEntity user;
     private ImageEntity[] imgArr;
     private long createTime;
+    private String shortContent;
+    private List<CommentsEntity> commentsEntityList;
+    private String formatTime;
+    private String commentNum;
  }

@@ -1,5 +1,6 @@
 package com.service.found.mapper;
 
+import com.service.found.entity.CommentsEntity;
 import com.service.found.entity.IndexEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,5 +13,6 @@ public interface IndexMapper {
 
     void add(@Param("indexEntity") IndexEntity indexEntityBuild);
     List<IndexEntity> getLatestData(long latestTime);
+
 //    void add(String );
 }

@@ -31,8 +31,6 @@ public class IndexController {
     @RequestMapping("/latest")
     public List<IndexEntity> getLatestData(@RequestParam("latestTime") long latestTime){
         List<IndexEntity> latestData = indexService.getLatestData(latestTime);
-
-        System.out.println(latestData);
         return latestData;
     }
 }

@@ -34,13 +34,11 @@ public class AddController {
             String fileName = file.getOriginalFilename();
             //判断是否有文件
             if (!StringUtils.isEmpty(fileName)) {
+                String path = uploadPath + UUID.randomUUID().toString() + getFileType(fileName);
                 //输出到本地路径
-                File outFile = new File(uploadPath + UUID.randomUUID().toString() + getFileType(fileName));
-//                byte [] bytes = file.getBytes();
-//                OutputStream out = new FileOutputStream(outFile);
-//                out.write(bytes);
+                File outFile = new File(path);
                 file.transferTo(outFile);
-                return R.success();
+                return R.success(path);
             }
         } catch (Exception e) {
             log.error("文件上传失败", e);
@@ -62,7 +60,8 @@ public class AddController {
     @PostMapping("/add")
         public R add(@RequestBody IndexEntity indexEntity , HttpServletRequest request){
         try {
-            addService.add(indexEntity,request.getHeader("session_key"));
+            String sessionKey = request.getHeader("session_key");
+            addService.add(indexEntity,sessionKey);
             return R.success();
         }catch (Exception e) {
             log.error("发表帖子失败",e);

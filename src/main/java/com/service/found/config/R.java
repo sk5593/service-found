@@ -25,6 +25,9 @@ public class R implements Serializable {
     public static R success(){
         return new R(200,"success");
     }
+    public static R success(Object o){
+        return  new R(200,"success",o);
+    }
     public static R fail(){
         return new R(500,"fail");
     }

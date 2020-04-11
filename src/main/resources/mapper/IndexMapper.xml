@@ -2,33 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.service.found.mapper.IndexMapper">
     <resultMap id="baseResultMap" type="com.service.found.entity.IndexEntity">
-        <id property="id" column="f_id"/>
-        <result property="content" column="f_content"/>
-        <result property="images" column="f_images"/>
-        <result property="opId" column="f_opid"/>
-        <result property="createTime" column="f_create_time"/>
-        <collection  property="user" ofType="com.service.found.entity.UserEntity">
-            <id property="openId" column="f_openid"/>
-            <result property="name" column="f_name"/>
-            <result property="image" column="f_image"/>
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="images" column="images"/>
+        <result property="opId" column="opid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="commentNum" column="comment_num"/>
+        <collection property="user" ofType="com.service.found.entity.UserEntity">
+            <id property="openId" column="openid"/>
+            <result property="name" column="name"/>
+            <result property="image" column="image"/>
         </collection>
     </resultMap>
     <insert id="add" parameterType="com.service.found.entity.IndexEntity">
-       INSERT INTO f_index(f_opid,f_content,f_images,f_create_time)
+       INSERT INTO f_index(opid,content,images,create_time)
        VALUES (#{indexEntity.opId},#{indexEntity.content},#{indexEntity.images},#{indexEntity.createTime})
     </insert>
+
     <select id="selectIndex" resultMap="baseResultMap">
-        select u.f_name,u.f_image,i.f_opid,i.f_content,i.f_images,i.f_create_time from f_index i
+        select count(c.aid) as comment_num,i.id,u.name,u.image,i.opid,i.content,i.images,i.create_time from (f_index i
         INNER JOIN f_user u
-        on u.f_openid = i.f_opid
-        ORDER BY i.f_create_time DESC
+        on u.openid = i.opid)
+		LEFT JOIN f_comments c on c.aid = i.id
+		GROUP BY i.id
+        ORDER BY i.create_time DESC
     </select>
     <select id="getLatestData" resultMap="baseResultMap" parameterType="long">
-        select u.f_name,u.f_image,i.f_opid,i.f_content,i.f_images,i.f_create_time from f_index i
+        select count(c.aid) as comment_num,i.id,u.name,u.image,i.opid,i.content,i.images,i.create_time from (f_index i
         INNER JOIN f_user u
-        on u.f_openid = i.f_opid
-        and	i.f_create_time > #{latestTime}
-        ORDER BY i.f_create_time DESC
+        on u.openid = i.opid)
+        LEFT JOIN f_comments c on c.aid = i.id
+        WHERE i.create_time > #{latestTime}
+		GROUP BY i.id
+        ORDER BY i.create_time DESC
         limit 10
     </select>
+
 </mapper>
